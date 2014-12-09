@@ -50,7 +50,7 @@ class Application(tk.Frame):
                      maxColumnLength[column] = len(row[column])
         for column in range(len(self.data[0])):
             maxColumnLength.append(0);
-            for row in range(1,len(self.data)):
+            for row in range(0,len(self.data)):
                 self.data[row][column] = self.data[row][column].ljust(maxColumnLength[column]," ");
                 
     def printDataAsHTML(self):
