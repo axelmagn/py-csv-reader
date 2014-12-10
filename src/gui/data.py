@@ -6,7 +6,7 @@ class DataPane(tk.Frame):
     def __init__(self, master=None, data=[]):
         tk.Frame.__init__(self, master)
         self.data = data
-        self.data_view = tk.Label(self, text="")
+        self.data_view = tk.Label(self, text="",font=("courier"))
         self.data_view.pack(fill="both")
         self.refresh()
 
