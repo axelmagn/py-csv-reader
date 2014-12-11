@@ -23,23 +23,33 @@ class Application(tk.Frame):
 
     def create_widgets(self):
         self.file_selector = gui.FileSelector(self, command=self.select_file)
+        self.remove_column = gui.RemoveColumn(self, command=self.removeColumn)
+        self.printHTML = gui.PrintHTML(self, command=self.printDataAsHTML)
+        self.column_containsfilter = gui.ColumnContainsFilter(self,command=self.columnContainsFilter)
         self.status_pane = gui.StatusPane(self)
         self.status_pane["pwd"] = os.getcwd()
         self.status_pane["status"] = "Ready to open file"
         self.data_pane = gui.DataPane(self, data=[])
         self.file_selector.pack(side="top", fill="x")
+        self.column_containsfilter.pack(side="top", fill="x")
+        self.remove_column.pack(side="top", fill="x")
+        self.printHTML.pack(side="top", fill="x")
         self.status_pane.pack(side="top", fill="x")
         self.data_pane.pack(fill="both")
 
     def removeColumn(self,index):
         for row in self.data:
-            del row[index]
+            del row[int(index)]
+        self.updateDataDisplay()
 
     def columnContainsFilter(self,cindex,cfilter):
+        data = [self.data[0]]
         for row in range(1,len(self.data)):
-            if(cfilter not in self.data[row][cindex]):
-                del self.data[row];
-                row += -1;
+            if(cfilter in self.data[row][int(cindex)]):
+                data.append(self.data[row]);
+        self.data = data
+        self.updateDataDisplay()
+
 
     def padData(self):
         maxColumnLength = [];
@@ -67,6 +77,12 @@ class Application(tk.Frame):
             print '</tr>'
 
 
+    def updateDataDisplay(self):
+            self.data_pane.data = self.data
+            self.data_pane.refresh()
+            self.status_pane["status"] = "Displaying File"
+            self.status_pane.update()
+
 
     def select_file(self, file_path):
         try:
@@ -76,11 +92,8 @@ class Application(tk.Frame):
                 self.status_pane.update()
                 r = csv.reader(f)
                 self.data = list(r)
-                self.padData();
-                self.data_pane.data = self.data
-                self.data_pane.refresh()
-                self.status_pane["status"] = "Displaying File"
-                self.status_pane.update()
+                self.padData()
+                self.updateDataDisplay()
         except Exception as e:
             self.status_pane["status"] = "ERROR: " + str(e)
 
