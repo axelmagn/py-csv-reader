@@ -1,4 +1,4 @@
-import tkinter as tk
+import Tkinter as tk
 
 
 class FileSelector(tk.Frame):
